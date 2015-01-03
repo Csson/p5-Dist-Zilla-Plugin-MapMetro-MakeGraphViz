@@ -1,0 +1,8 @@
+/Dist-Zilla-Plugin-MapMetro-MakeGraphViz-*
+/.build
+/_build*
+/Build
+MYMETA.*
+!META.json
+/.prove
+
