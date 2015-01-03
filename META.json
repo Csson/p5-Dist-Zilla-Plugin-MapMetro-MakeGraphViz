@@ -1,5 +1,5 @@
 {
-   "abstract" : "Short intro",
+   "abstract" : "Automatically creates a GraphViz2 visualisation of a map",
    "author" : [
       "Erik Carlsson <info@code301.com>"
    ],
@@ -56,6 +56,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz/issues"
+      },
+      "homepage" : "https://github.com/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz.git",
+         "web" : "https://github.com/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz"
+      }
+   },
    "version" : "0.0001"
 }
 

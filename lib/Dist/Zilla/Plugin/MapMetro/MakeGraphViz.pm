@@ -7,12 +7,11 @@ use 5.14.0;
 use Moose;
 use namespace::sweep;
 use Path::Tiny;
-use Types::Standard 'HashRef';
+use Types::Standard qw/HashRef ArrayRef/;
 use Map::Metro;
 use GraphViz2;
 
-use Dist::Zilla::File::InMemory;
-with 'Dist::Zilla::Role::FileGatherer';
+with 'Dist::Zilla::Role::AfterBuild';
 
 has settings => (
     is => 'rw',
@@ -24,8 +23,19 @@ has settings => (
         get_setting => 'get',
     },
 );
+has hidden_positions => (
+    is => 'rw',
+    isa => ArrayRef,
+    traits => ['Array'],
+    init_arg => undef,
+    handles => {
+        add_hidden => 'push',
+        all_hiddens => 'elements',
+    },
+);
 
-sub gather_files {
+
+sub after_build {
     my $self = shift;
 
     my @mapclasses = path('lib/Map/Metro/Plugin/Map')->children(qr/\.pm$/);
@@ -34,6 +44,9 @@ sub gather_files {
     my $map = path(shift @mapclasses)->basename;
     $map =~ s{\.pm$}{};
 
+    eval "use Map::Metro::Plugin::Map::$map";
+    return if $@;
+    $self->log('Graphvizing...');
     my $graph = Map::Metro->new($map)->parse;
 
     my $customconnections = {};
@@ -43,20 +56,33 @@ sub gather_files {
         $settings =~ s{\n}{ }g;
 
         foreach my $custom (split m/ +/ => $settings) {
-            if($custom =~ m{^(\d+)->(\d+):([\d\.]+)$}) {
+            if($custom =~ m{^(\d+)-(\d+):([\d\.]+)$}) {
                 my $origin_station_id = $1;
                 my $destination_station_id = $2;
                 my $len = $3;
 
-                $self->set_setting(sprintf ('%s-%s', $origin_station_id, $destination_station_id), $len);
-                $self->set_setting(sprintf ('%s-%s', $destination_station_id, $origin_station_id), $len);
+                $self->set_setting(sprintf ('len-%s-%s', $origin_station_id, $destination_station_id), $len);
+                $self->set_setting(sprintf ('len-%s-%s', $destination_station_id, $origin_station_id), $len);
             }
-            elsif($custom =~ m{^!(\d+)->(\d+):([\d\.]+)$}) {
+            elsif($custom =~ m{^\*(\d+):(-?[\d\.]+,-?[\d\.]+)}) {
+                my $station_id = $1;
+                my $hidden_station_pos = $2;
+
+                $self->add_hidden({ station_id => $station_id, pos => $hidden_station_pos });
+            }
+            elsif($custom =~ m{^(\d+):(-?\d+,-?\d+!?)$}) {
+                my $station_id = $1;
+                my $pos = $2;
+
+                $self->set_setting(sprintf ('pos-%s', $station_id) => $pos);
+            }
+            elsif($custom =~ m{^!(\d+)-(\d+):(\d+)\^([\d\.]+)$}) {
                 my $origin_station_id = $1;
                 my $destination_station_id = $2;
-                my $len = $3;
+                my $connections = $3;
+                my $len = $4;
 
-                $customconnections->{ $origin_station_id }{ $destination_station_id } = $len;
+                $customconnections->{ $origin_station_id }{ $destination_station_id } = { connections => $connections, len => $len };
             }
         }
     }
@@ -68,7 +94,9 @@ sub gather_files {
         edge => { penwidth => 5, len => 1.2 },
     );
     foreach my $station ($graph->all_stations) {
-        $viz->add_node(name => $station->id, label => $station->id);
+        my %pos = $self->get_pos_for($station->id);
+        my %node = (name => $station->id, label => $station->id, %pos);
+        $viz->add_node(%node);
     }
 
     foreach my $transfer ($graph->all_transfers) {
@@ -90,23 +118,77 @@ sub gather_files {
         }
     }
     #* Custom connections (for better visuals)
+    my $invisible_station_id = 99000000;
+    foreach my $hidden ($self->all_hiddens) {
+        $viz->add_node(name => ++$invisible_station_id,
+                       label => '',
+                       ($ENV{'MMDEBUG'} ? () : (style => 'invis')),
+                       width => 0.1,
+                       height => 0.1,
+                       penwidth => 5,
+                       color => '#ff0000',
+                       pos => "$hidden->{'pos'}!",
+        );
+        $viz->add_edge(from => $invisible_station_id,
+                       to => $hidden->{'station_id'},
+                       color => '#ff0000',
+                       penwidth => $ENV{'MMDEBUG'} ? 1 : 0,
+                       len => 1,
+                       weight => 100,
+        );
+    }
+
+
     foreach my $origin_station_id (keys %{ $customconnections }) {
         foreach my $destination_station_id (keys %{ $customconnections->{ $origin_station_id }}) {
-            my $len = $customconnections->{ $origin_station_id }{ $destination_station_id };
-            $viz->add_edge(from => $origin_station_id,
+            my $len = $customconnections->{ $origin_station_id }{ $destination_station_id }{'len'};
+            my $connection_count = $customconnections->{ $origin_station_id }{ $destination_station_id }{'connections'};
+
+            my $previous_station_id = $origin_station_id;
+
+            foreach my $extra_connection (1 .. $connection_count - 1) {
+                $viz->add_node(name => ++$invisible_station_id, label => '', style => 'invis', width => 0.1, height => 0.1, penwidth => 5, color => '#ff0000');
+
+                $viz->add_edge(from => $previous_station_id,
+                               to => $invisible_station_id,
+                               color => '#ff0000',
+                               penwidth => $ENV{'MMDEBUG'} ? 1 : 0,
+                               len => $len,
+                );
+
+                $previous_station_id = $invisible_station_id;
+            }
+
+            $viz->add_edge(from => $previous_station_id,
                            to => $destination_station_id,
-                           color => '#ffffff',
-                           penwidth => 0,
+                           color => '#ff0000',
+                           penwidth => $ENV{'MMDEBUG'} ? 1 : 0,
                            len => $len,
             );
         }
     }
 
+    path('static/images')->mkpath;
     my $file = sprintf('static/images/%s.png', lc $map);
     $viz->run(format => 'png', output_file => $file, driver => 'neato');
 
-    $self->add_file($file);
+    $self->log(sprintf 'Saved in %s.', $file);
+}
 
+sub get_len_for {
+    my $self = shift;
+    my ($origin_station_id, $destination_station_id) = @_;
+    return (len => $self->get_setting("len-$origin_station_id-$destination_station_id")) if $self->get_setting("len-$origin_station_id-$destination_station_id");
+    return (len => $self->get_setting("len-$origin_station_id-0")) if $self->get_setting("len-$origin_station_id-0");
+    return (len => $self->get_setting("len-0-$destination_station_id")) if $self->get_setting("len-0-$destination_station_id");
+    return ();
+}
+
+sub get_pos_for {
+    my $self = shift;
+    my $station_id = shift;
+    return (pos => $self->get_setting("pos-$station_id")) if $self->get_setting("pos-$station_id");
+    return ();
 }
 
 1;
@@ -117,16 +199,36 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::MapMetro::MakeGraphViz - Short intro
+Dist::Zilla::Plugin::MapMetro::MakeGraphViz - Automatically creates a GraphViz2 visualisation of a map
 
 =head1 SYNOPSIS
 
-  use Dist::Zilla::Plugin::MapMetro::MakeGraphViz;
+  ;in dist.ini
+  [MapMetro::MakeGraphViz]
 
 =head1 DESCRIPTION
 
-Dist::Zilla::Plugin::MapMetro::MakeGraphViz is ...
+This L<Dist::Zilla> plugin creates a L<GraphViz2> visualisation of a L<Map::Metro> map, and is only useful in such a distribution.
 
 =head1 SEE ALSO
+
+L<Map::Metro>
+
+L<Map::Metro::Plugin::Map>
+
+L<Map::Metro::Plugin::Map::Stockholm> - An example
+
+=head1 AUTHOR
+
+Erik Carlsson E<lt>info@code301.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2015 - Erik Carlsson
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
