@@ -8,6 +8,9 @@ Revision history for Dist-Zilla-Plugin-MapMetro-MakeGraphViz
  [Documentation]
 
  [Enhancements]
+ - Now uses the local metro file, instead of the installed one.
+ - Requires environment variable to run.
+ - Adds a label with the city name to the generated image.
 
  [Meta]
 
