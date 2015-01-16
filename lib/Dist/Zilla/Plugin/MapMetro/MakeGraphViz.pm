@@ -144,8 +144,8 @@ sub after_build {
         );
         $viz->add_edge(from => $invisible_station_id,
                        to => $hidden->{'station_id'},
-                       color => '#ff0000',
-                       penwidth => $ENV{'MMVIZDEBUG'} ? 1 : 0,
+                       color => $ENV{'MMVIZDEBUG'} ? '#ff0000' : '#ffffff',
+                       penwidth => 5,
                        len => 1,
                        weight => 100,
         );
@@ -224,6 +224,8 @@ Dist::Zilla::Plugin::MapMetro::MakeGraphViz - Automatically creates a GraphViz2 
 This L<Dist::Zilla> plugin creates a L<GraphViz2> visualisation of a L<Map::Metro> map, and is only useful in such a distribution.
 
 =head1 SEE ALSO
+
+L<Task::MapMetro::Dev> - Map::Metro development tools
 
 L<Map::Metro>
 
