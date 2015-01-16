@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use 5.14.0;
 
+# VERSION
+# ABSTRACT: Automatically creates a GraphViz2 visualisation of a Metro::Map map
+
 use Moose;
 use namespace::sweep;
 use Path::Tiny;
@@ -210,10 +213,6 @@ __END__
 
 =encoding utf-8
 
-=head1 NAME
-
-Dist::Zilla::Plugin::MapMetro::MakeGraphViz - Automatically creates a GraphViz2 visualisation of a map
-
 =head1 SYNOPSIS
 
   ;in dist.ini
@@ -225,25 +224,10 @@ This L<Dist::Zilla> plugin creates a L<GraphViz2> visualisation of a L<Map::Metr
 
 =head1 SEE ALSO
 
-L<Task::MapMetro::Dev> - Map::Metro development tools
+=for :list
+* L<Task::MapMetro::Dev> - Map::Metro development tools
+* L<Map::Metro>
+* L<Map::Metro::Plugin::Map>
+* L<Map::Metro::Plugin::Map::Stockholm> - An example
 
-L<Map::Metro>
-
-L<Map::Metro::Plugin::Map>
-
-L<Map::Metro::Plugin::Map::Stockholm> - An example
-
-=head1 AUTHOR
-
-Erik Carlsson E<lt>info@code301.comE<gt>
-
-=head1 COPYRIGHT
-
-Copyright 2015 - Erik Carlsson
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
+cut
