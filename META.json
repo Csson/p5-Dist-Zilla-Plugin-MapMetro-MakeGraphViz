@@ -46,11 +46,6 @@
             "namespace::sweep" : "0",
             "perl" : "5.014000"
          }
-      },
-      "test" : {
-         "requires" : {
-            "Test::NoTabs" : "0"
-         }
       }
    },
    "provides" : {
