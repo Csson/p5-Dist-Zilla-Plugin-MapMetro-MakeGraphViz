@@ -230,4 +230,4 @@ This L<Dist::Zilla> plugin creates a L<GraphViz2> visualisation of a L<Map::Metr
 * L<Map::Metro::Plugin::Map>
 * L<Map::Metro::Plugin::Map::Stockholm> - An example
 
-cut
+=cut
