@@ -6,6 +6,7 @@ Revision history for Dist-Zilla-Plugin-MapMetro-MakeGraphViz
  [Bug Fixes]
 
  [Documentation]
+ - Fixed pod error (pr:1)
 
  [Enhancements]
 
@@ -14,6 +15,16 @@ Revision history for Dist-Zilla-Plugin-MapMetro-MakeGraphViz
  [New Features]
 
  [Revision]
+
+0.1101 2015-01-16T22:34:39Z CET
+ [Documentation]
+ - Cleaned up, pod now built with pod weaver
+
+ [Enhancements]
+ - When using hidden lines, make them white, not width 0.
+
+ [Meta]
+ - Added missing prereq.
 
 0.1100 2015-01-04T18:19:04Z CET
  [Enhancements]

@@ -4,7 +4,7 @@
       "Erik Carlsson <info@code301.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.029, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Dist::Zilla version 5.031, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -51,7 +51,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::MapMetro::MakeGraphViz" : {
          "file" : "lib/Dist/Zilla/Plugin/MapMetro/MakeGraphViz.pm",
-         "version" : "0.1101"
+         "version" : "0.1102"
       }
    },
    "release_status" : "stable",
@@ -66,6 +66,9 @@
          "web" : "https://github.com/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz"
       }
    },
-   "version" : "0.1101"
+   "version" : "0.1102",
+   "x_contributors" : [
+      "Philippe Bruhat (BooK) <book@cpan.org>"
+   ]
 }
 
