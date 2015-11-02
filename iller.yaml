@@ -9,20 +9,21 @@ prereqs:
     recommends:
     requires:
      - perl: 5.014000
-     - GraphViz2
-     - Moose: 2.00
+     - Moose: 2.0000
+     - MooseX::AttributeShortcuts
+     - Dist::Zilla: 5.000
      - namespace::autoclean
      - Path::Tiny
-     - MooseX::AttributeShortcuts
      - Types::Standard
-     - Map::Metro::Shim
+     - GraphViz2
+     - Map::Metro: 0.2000
 
 plugins:
   - +config: Author::CSSON
 
   - +add_plugin: TravisYML
     +before: Git::Tag
-    perl_version: 5.16
+    perl_version: 5.16 5.20
     post_before_install: cpanm File::Slurp --verbose --force && sudo apt-get update -qq && sudo apt-get install -y graphviz
     pre_install: cpanm GraphViz2
 

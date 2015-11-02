@@ -8,7 +8,7 @@ use 5.14.0;
 # ABSTRACT: Automatically creates a GraphViz2 visualisation of a Metro::Map map
 
 use Moose;
-use namespace::sweep;
+use namespace::autoclean;
 use Path::Tiny;
 use MooseX::AttributeShortcuts;
 use Types::Standard qw/HashRef ArrayRef Str Maybe/;

@@ -2,9 +2,11 @@
 
 Dist::Zilla::Plugin::MapMetro::MakeGraphViz - Automatically creates a GraphViz2 visualisation of a Metro::Map map
 
+![Requires Perl 5.14+](https://img.shields.io/badge/perl-5.14+-brightgreen.svg) [![Travis status](https://api.travis-ci.org/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz.svg?branch=master)](https://travis-ci.org/Csson/p5-Dist-Zilla-Plugin-mapMetro-MakeGraphViz)
+
 # VERSION
 
-Version 0.1102, released 2015-01-31.
+Version 0.1103, released 2015-11-02.
 
 # SYNOPSIS
 
@@ -36,7 +38,7 @@ Erik Carlsson <info@code301.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Erik Carlsson <info@code301.com>.
+This software is copyright (c) 2015 by Erik Carlsson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
