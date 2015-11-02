@@ -21,9 +21,10 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.014000",
   "NAME" => "Dist::Zilla::Plugin::MapMetro::MakeGraphViz",
   "PREREQ_PM" => {
+    "Dist::Zilla" => "5.000",
     "GraphViz2" => 0,
-    "Map::Metro::Shim" => 0,
-    "Moose" => "2.00",
+    "Map::Metro" => "0.2000",
+    "Moose" => "2.0000",
     "MooseX::AttributeShortcuts" => 0,
     "Path::Tiny" => 0,
     "Types::Standard" => 0,
@@ -42,11 +43,12 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Dist::Zilla" => "5.000",
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "GraphViz2" => 0,
-  "Map::Metro::Shim" => 0,
-  "Moose" => "2.00",
+  "Map::Metro" => "0.2000",
+  "Moose" => "2.0000",
   "MooseX::AttributeShortcuts" => 0,
   "Path::Tiny" => 0,
   "Test::More" => "0.96",

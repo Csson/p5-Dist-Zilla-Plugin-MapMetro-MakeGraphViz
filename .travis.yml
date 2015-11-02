@@ -1,6 +1,7 @@
 language: perl
 perl:
    - '5.16'
+   - '5.20'
 matrix:
    fast_finish: true
 before_install:

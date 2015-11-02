@@ -14,6 +14,9 @@ Revision history for Dist-Zilla-Plugin-MapMetro-MakeGraphViz
  [New Features]
 
  [Revision]
+ - Now uses namespace::autoclean instead of namespace::sweep
+ - Now uses [MakeMaker] instead of [ModuleBuild*]
+ - Prereqs is set in dist.ini (cpanfile removed)
 
 0.1102 2015-01-31T17:25:16Z CET
  [Documentation]
