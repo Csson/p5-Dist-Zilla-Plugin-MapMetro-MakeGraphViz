@@ -10,7 +10,10 @@ matrix:
 before_install:
    - git config --global user.name "TravisCI"
    - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
-   - cpanm File::Slurp --verbose --force && sudo apt-get update -qq && sudo apt-get install -y graphviz
+   - cpanm File::Slurp --verbose --force
+   - cpanm Parse::Keyword --verbose --force
+   - sudo apt-get update -qq
+   - sudo apt-get install -y graphviz
 install:
    - cpanm GraphViz2
    - cpanm --quiet --notest --skip-satisfied Dist::Zilla

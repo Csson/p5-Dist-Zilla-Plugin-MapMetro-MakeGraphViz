@@ -27,7 +27,12 @@ plugins:
 
   - +extend_plugin: TravisYML
     sudo: 1
-    post_before_install: cpanm File::Slurp --verbose --force && sudo apt-get update -qq && sudo apt-get install -y graphviz
+    # Parse::Keyword seems to fail on 5.22
+    post_before_install:
+     - cpanm File::Slurp --verbose --force
+     - cpanm Parse::Keyword --verbose --force
+     - sudo apt-get update -qq
+     - sudo apt-get install -y graphviz
     pre_install: cpanm GraphViz2
 
 ---
