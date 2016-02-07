@@ -19,6 +19,7 @@ prereqs:
      - Types::Path::Tiny
      - GraphViz2
      - Map::Metro: 0.2300
+     - String::CamelCase
 
 plugins:
   - +config: Author::CSSON
