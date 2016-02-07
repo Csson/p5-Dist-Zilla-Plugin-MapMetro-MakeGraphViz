@@ -7,12 +7,22 @@ Revision history for Dist-Zilla-Plugin-MapMetro-MakeGraphViz
 
  [Documentation]
 
- [Enhancements]
+ [Other Changes]
+  - Moved to BeforeBuild (from AfterBuild).
+  - Now does Dist::Zilla::Role::Plugin.
 
  [Meta]
 
  [New Features]
+  - Support for multiple maps in one distribution.
 
+ [Requirements]
+
+ [Revision]
+
+ [Testing]
+
+0.1103 2015-11-02T16:03:55Z UTC
  [Revision]
  - Now uses namespace::autoclean instead of namespace::sweep
  - Now uses [MakeMaker] instead of [ModuleBuild*]
